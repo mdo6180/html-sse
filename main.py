@@ -13,6 +13,7 @@ from table import Table
 
 from components.home import home_page
 from components.table import table_rows
+from components.chat import chat_homepage, chat_data
 
 table = Table()
 node1 = Node("node1", table)
@@ -57,3 +58,35 @@ async def stuff(request: Request):
                 break
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+@app.get("/chat", response_class=HTMLResponse)
+def chat_page():
+    return chat_homepage()
+
+n = 0
+@app.get("/chat-row", response_class=HTMLResponse)
+def chat_row():
+    global n
+    html_str = chat_data(n)
+    n += 1
+    return html_str
+
+@app.get("/event-source")
+async def chat(request: Request):
+    async def chatroom():
+        i = 0
+
+        while True:
+            try:
+                await asyncio.sleep(1)
+                print("update")
+                yield "event: EventName\n" 
+                yield "data:\n\n"
+                i += 1
+            
+            except asyncio.CancelledError:
+                yield "event: close\n"
+                break
+
+    return StreamingResponse(chatroom(), media_type="text/event-stream")
+
