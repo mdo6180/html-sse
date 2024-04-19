@@ -14,7 +14,7 @@ def chat_homepage():
             <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/sse.js"></script>
         </head>
         <body hx-ext="sse" sse-connect="/event-source">
-            <div hx-get="/chat-row" hx-trigger="sse:EventName" hx-swap="beforeend"></div>
+            <div hx-get="/chat-row" hx-trigger="load, sse:EventName" hx-swap="beforeend"></div>
         </body>
     </html>
     """
