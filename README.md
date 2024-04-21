@@ -11,7 +11,9 @@ The attribute `hx-trigger="sse:EventName"` then triggers a GET request to an end
 
 ### Lessons learned:
 1. HTML snippets must be formatted properly before being sent as a message in an event. See the `format_html_for_sse` function in sse.py. Note: I had never used SSEs before trying out the extension.
-2. An SSE-only approach is simpler because it requires fewer endpoints and fewer html snippets.
+2. An SSE-only approach is simpler and more efficient because:
+    1. It requires fewer endpoints.
+    2. The entire interaction between the server and client happens with one message instead of three messages like in server callbacks.
 3. Triggering server callbacks is more flexible; a few reasons why:
     1. Suppose we want to add two triggers, one to trigger on load and one that responds to an SSE. In this scenario, we could use the server callback approach with the attribute `hx-trigger="load, sse:EventName"`.
     2. According to the documentation, modifiers like `scroll` are not supported by the `hx-swap` attribute when it is used to control the swap strategy of the html snippet recieved by `sse-swap="EventName"`.
