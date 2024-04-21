@@ -14,7 +14,7 @@ The attribute `hx-trigger="sse:EventName"` then triggers a GET request to an end
 2. An SSE-only approach is simpler and more efficient because:
     1. It requires fewer endpoints.
     2. The entire interaction between the server and client happens with one message instead of three messages like in server callbacks.
-3. Triggering server callbacks is more flexible; a few reasons why:
+3. Triggering server callbacks is more flexible because:
     1. Suppose we want to add two triggers, one to trigger on load and one that responds to an SSE. In this scenario, we could use the server callback approach with the attribute `hx-trigger="load, sse:EventName"`.
     2. According to the documentation, modifiers like `scroll` are not supported by the `hx-swap` attribute when it is used to control the swap strategy of the html snippet recieved by `sse-swap="EventName"`.
     3. You can use and reuse the same endpoint to do server callbacks for multiple events from multiple event sources.
