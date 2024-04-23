@@ -3,7 +3,7 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from fastapi import Request, Response
+from fastapi import Request
 from fastapi.responses import StreamingResponse
 
 import asyncio
@@ -11,7 +11,7 @@ import asyncio
 from subapp.main import Node
 from table import Table
 
-from components.home import home_page, sse_rows
+from components.home import home_page
 from components.table import table_rows
 
 table = Table()
@@ -24,24 +24,21 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 
-@app.get("/", response_class=HTMLResponse)
-def read_root():
-    return home_page()
 
 
 start_index = 0
 end_index = 0
 
-@app.get("/rows", response_class=HTMLResponse)
-def rows():
+
+@app.get("/", response_class=HTMLResponse)
+def read_root():
     global start_index
     global end_index
     end_index = len(table)
 
-    print(f"GET: start_index = {start_index}, end_index = {end_index}")
-    return_table = sse_rows(table[0:end_index])
+    print(f"GET /: start_index = {start_index}, end_index = {end_index}")
     start_index = end_index
-    return return_table
+    return home_page(table[0:end_index])
 
 def format_html_for_sse(html_content: str) -> str:
     # Split the HTML content into lines

@@ -3,8 +3,8 @@ from .table import table_rows
 
 
 
-def home_page():
-    return """<html>
+def home_page(rows: List[Dict]):
+    return f"""<html>
         <head>
             <meta charset="UTF-8">
             <title>Anacostia Console</title>
@@ -25,17 +25,10 @@ def home_page():
                     <th>Author</th>
                     <th>Node</th>
                 </thead>
-                <tbody hx-get="/rows" hx-trigger="load" hx-target="this" hx-swap="outerHTML"> 
+                <tbody hx-ext="sse" sse-connect="/events" sse-swap="UpdateEvent" hx-swap="beforeend"> 
+                {table_rows(rows)}
                 </tbody>
             </table>
         </body>
     </html>
-    """
-
-
-def sse_rows(rows: List[Dict]):
-    return f"""
-        <tbody hx-ext="sse" sse-connect="/events" sse-swap="UpdateEvent" hx-swap="beforeend"> 
-        {table_rows(rows)}
-        </tbody>
     """
