@@ -11,9 +11,8 @@ import asyncio
 from subapp.main import Node
 from table import Table
 
-from components.home import home_page
+from components.home import home_page, sse_rows
 from components.table import table_rows
-from components.chat import chat_homepage, chat_data
 
 table = Table()
 node1 = Node("node1", table)
@@ -31,62 +30,48 @@ def read_root():
 
 
 start_index = 0
+end_index = 0
 
 @app.get("/rows", response_class=HTMLResponse)
 def rows():
     global start_index
+    global end_index
     end_index = len(table)
 
-    if end_index > start_index:
-        return_table = table_rows(table[start_index:end_index])
-        print(f"start_index = {start_index}, end_index = {end_index}")
-        start_index = end_index
-        return return_table
+    print(f"GET: start_index = {start_index}, end_index = {end_index}")
+    return_table = sse_rows(table[0:end_index])
+    start_index = end_index
+    return return_table
 
+def format_html_for_sse(html_content: str) -> str:
+    # Split the HTML content into lines
+    lines = html_content.split('\n')
+
+    # Prefix each line with 'data: ' and join them back into a single string with newlines
+    formatted_content = "\n".join(f"data: {line}" for line in lines if line.strip()) + "\n\n"
+
+    return formatted_content
 
 @app.get("/events", response_class=HTMLResponse)
 async def stuff(request: Request):
     async def event_stream():
         while True:
             try:
-                await asyncio.sleep(1)
-                print("update")
-                yield "event: update\n"
+                global start_index
+                global end_index 
+                end_index = len(table)
+
+                if end_index > start_index:
+                    print(f"sse: start_index = {start_index}, end_index = {end_index}")
+                    updated_table = table_rows(table[start_index:end_index])
+                    start_index = end_index
+                    yield "event: UpdateEvent\n"
+                    yield format_html_for_sse(updated_table)
+                else:
+                    await asyncio.sleep(0.5)
 
             except asyncio.CancelledError:
-                yield "event: close\n"
+                print("browser closed")
                 break
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
-
-@app.get("/chat", response_class=HTMLResponse)
-def chat_page():
-    return chat_homepage()
-
-n = 0
-@app.get("/chat-row", response_class=HTMLResponse)
-def chat_row():
-    global n
-    html_str = chat_data(n)
-    n += 1
-    return html_str
-
-@app.get("/event-source")
-async def chat(request: Request):
-    async def chatroom():
-        i = 0
-
-        while True:
-            try:
-                await asyncio.sleep(1)
-                print("update")
-                yield "event: EventName\n" 
-                yield "data:\n\n"
-                i += 1
-            
-            except asyncio.CancelledError:
-                yield "event: close\n"
-                break
-
-    return StreamingResponse(chatroom(), media_type="text/event-stream")
-

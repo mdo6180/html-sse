@@ -1,3 +1,8 @@
+from typing import List, Dict
+from .table import table_rows
+
+
+
 def home_page():
     return """<html>
         <head>
@@ -12,20 +17,25 @@ def home_page():
 
             <!-- htmx SSE extension -->
             <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/sse.js"></script>
-
-            <!-- minified _Hyperscript (Whole 9 Yards version) -->
-            <script src="/static/js/_hyperscript_w9y.min.js"></script>
         </head>
         <body>
-            <table class="table is-bordered" hx-ext="sse" sse-connect="/events">
+            <table class="table is-bordered">
                 <thead>
                     <th>Book</th>
                     <th>Author</th>
                     <th>Node</th>
                 </thead>
-                <tbody hx-get="/rows" hx-trigger="sse:update" hx-target="this" hx-swap="beforeend"> 
+                <tbody hx-get="/rows" hx-trigger="load" hx-target="this" hx-swap="outerHTML"> 
                 </tbody>
             </table>
         </body>
     </html>
+    """
+
+
+def sse_rows(rows: List[Dict]):
+    return f"""
+        <tbody hx-ext="sse" sse-connect="/events" sse-swap="UpdateEvent" hx-swap="beforeend"> 
+        {table_rows(rows)}
+        </tbody>
     """
