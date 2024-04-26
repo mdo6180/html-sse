@@ -19,7 +19,7 @@ def home_page(rows: List[Dict]):
             <script src="/static/js/htmx.js" type="text/javascript"></script>
 
             <!-- htmx SSE extension -->
-            <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/sse.js"></script>
+            <script src="/static/js/sse.js"></script>
         </head>
         <body>
             <table class="table is-bordered">
