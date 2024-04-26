@@ -4,7 +4,10 @@ from .table import table_rows
 
 
 def home_page(rows: List[Dict]):
-    return f"""<html>
+    # Note: the error "Error in event handler: Error: write after end" i've been encountering thus far was because <!DOCTYPE> isn't on the first line
+    return f"""
+    <!DOCTYPE>
+    <html>
         <head>
             <meta charset="UTF-8">
             <title>Anacostia Console</title>

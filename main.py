@@ -53,18 +53,21 @@ async def stuff(request: Request):
     async def event_stream():
         while True:
             try:
-                global start_index
-                global end_index 
-                end_index = len(table)
-
-                if end_index > start_index:
-                    print(f"sse: start_index = {start_index}, end_index = {end_index}")
-                    updated_table = table_rows(table[start_index:end_index])
-                    start_index = end_index
-                    yield "event: UpdateEvent\n"
-                    yield format_html_for_sse(updated_table)
+                if await request.is_disconnected():
+                    break
                 else:
-                    await asyncio.sleep(0.5)
+                    global start_index
+                    global end_index 
+                    end_index = len(table)
+
+                    if end_index > start_index:
+                        print(f"sse: start_index = {start_index}, end_index = {end_index}")
+                        updated_table = table_rows(table[start_index:end_index])
+                        start_index = end_index
+                        yield "event: UpdateEvent\n"
+                        yield format_html_for_sse(updated_table)
+                    else:
+                        await asyncio.sleep(1)
 
             except asyncio.CancelledError:
                 print("browser closed")
