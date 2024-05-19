@@ -27,13 +27,14 @@ async def chat(request: Request):
         while True:
             try:
                 await asyncio.sleep(1)
-                print("update")
+
+                print("event sent")
                 if i % 2 == 0:
-                    yield "event: EventName\n" 
-                    yield "data: black"
+                    yield "event: HelloEvent\n" 
+                    yield "data: black\n\n"
                 else:
-                    yield "event: EventName\n" 
-                    yield "data: red"
+                    yield "event: GoodbyeEvent\n" 
+                    yield "data: red\n\n"
 
                 i += 1
             

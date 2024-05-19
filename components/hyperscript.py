@@ -18,10 +18,31 @@ def homepage():
             <script src="/static/js/_hyperscript_w9y.min.js"></script>
         </head>
         <body>
-            <button _="on click send hello to .hello_div">Send</button>
-            <div>
-                <div class="hello_div" _="on hello add .red to me on goodbye add .green to me">hello</div>
-                <div class="hello_div" _="on hello add .green to me on goodbye add .red to me">goodbye</div>
+            <div _="eventsource EventStream from /event-source
+                        on open
+                            log 'event source connected'
+                        end
+                    end">
+                <div class="event_div" 
+                    _=" on HelloEvent from EventStream
+                            log it 
+                            remove .green from me
+                            add .red to me 
+                        end
+                        on GoodbyeEvent from EventStream
+                            log it
+                            remove .red from me
+                            add .green to me
+                        end">event1</div>
+                <div class="event_div" 
+                    _=" on HelloEvent from EventStream 
+                            remove .red from me
+                            add .green to me 
+                        end
+                        on GoodbyeEvent from EventStream 
+                            remove .green from me
+                            add .red to me
+                        end">event2</div>
             </div>
         </body>
     </html>
