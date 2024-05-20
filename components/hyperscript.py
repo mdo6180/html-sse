@@ -23,25 +23,25 @@ def homepage():
                             log 'event source connected'
                         end
                     end">
-                <div class="event_div" 
-                    _=" on HelloEvent from EventStream
-                            log it 
+                <div _="on HelloEvent from EventStream
                             remove .green from me
                             add .red to me 
+                            log event.data
                         end
                         on GoodbyeEvent from EventStream
-                            log it
                             remove .red from me
                             add .green to me
+                            log event.data
                         end">event1</div>
-                <div class="event_div" 
-                    _=" on HelloEvent from EventStream 
+                <div _="on HelloEvent from EventStream 
                             remove .red from me
                             add .green to me 
+                            log event.data
                         end
                         on GoodbyeEvent from EventStream 
                             remove .green from me
                             add .red to me
+                            log event.data
                         end">event2</div>
             </div>
         </body>
