@@ -6,8 +6,6 @@ def homepage():
             <meta charset="UTF-8">
             <title>Anacostia Console</title>
 
-            <link rel="stylesheet" href="/static/css/hyperscript.css">
-            
             <!-- non-minified Htmx -->
             <script src="/static/js/htmx.js" type="text/javascript"></script>
 
@@ -16,6 +14,15 @@ def homepage():
 
             <!-- minified _Hyperscript (Whole 9 Yards version) -->
             <script src="/static/js/_hyperscript_w9y.min.js"></script>
+
+            <style>
+                .red {
+                    color: red;
+                }
+                .green {
+                    color: green;
+                }
+            </style>
         </head>
         <body>
             <div _="eventsource EventStream from /event-source
