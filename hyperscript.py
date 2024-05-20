@@ -31,10 +31,10 @@ async def chat(request: Request):
                 print("event sent")
                 if i % 2 == 0:
                     yield "event: HelloEvent\n" 
-                    yield "data: \n\n"
+                    yield "data: hello\n\n"
                 else:
                     yield "event: GoodbyeEvent\n" 
-                    yield "data: \n\n"
+                    yield "data: goodbye\n\n"
 
                 i += 1
             
